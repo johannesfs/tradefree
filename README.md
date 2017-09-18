@@ -7,3 +7,5 @@ Download free data
 Parse it
 Calculate derived data
 Email signals
+
+Database should contain raw data, derived data, signals and actions
