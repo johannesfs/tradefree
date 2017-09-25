@@ -1,2 +1,2 @@
 EcbDownloader: main.cpp
-	g++ -lcurl main.cpp -o testprog
+	g++ -lcurl main.cpp -o tradefree
