@@ -46,12 +46,12 @@ bool downloadFile()
     CURL *curl;
     FILE *fp;
     CURLcode res;
-    //char *url = 'https://www.ecb.europa.eu/stats/eurofxref/eurofxref.zip?d4acbc94de4b8c8a6550ef5d9be07261';
+    const char *url = "https://www.ecb.europa.eu/stats/eurofxref/eurofxref.zip?d4acbc94de4b8c8a6550ef5d9be07261";
     char outfilename[FILENAME_MAX] = "./ref_currency.zip";
     curl = curl_easy_init();
     if (curl) {
       fp = fopen(outfilename,"wb");
-      curl_easy_setopt(curl, CURLOPT_URL, "https://www.ecb.europa.eu/stats/eurofxref/eurofxref.zip?d4acbc94de4b8c8a6550ef5d9be07261");
+      curl_easy_setopt(curl, CURLOPT_URL, url); // "https://www.ecb.europa.eu/stats/eurofxref/eurofxref.zip?d4acbc94de4b8c8a6550ef5d9be07261");
       curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, write_data);
       curl_easy_setopt(curl, CURLOPT_WRITEDATA, fp);
       res = curl_easy_perform(curl);
@@ -69,7 +69,7 @@ int main()
   //char *url[] = 'https://www.ecb.europa.eu/stats/eurofxref/eurofxref.zip?d4acbc94de4b8c8a6550ef5d9be07261';
 
   bool downloadSuccesful = downloadFile();
-  ifstream currencyFile("./eurofxref-hist.csv", ios::in);
+  ifstream currencyFile("./eurofxref.csv", ios::in);
 
   if (currencyFile.is_open())
     {
