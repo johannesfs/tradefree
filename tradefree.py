@@ -1,12 +1,12 @@
 import urllib2
 import zipfile
-import mysql.connector
+#import mysql.connector
 
 print("Welcome to the liberation of trading: TradeFree")
 
 #urllib2.quote
 
-outfile = open("./ref_currency.zip", "w")
+outfile = open("./data/ref_currency.zip", "w")
 
 try:
     response = urllib2.urlopen("https://www.ecb.europa.eu/stats/eurofxref/eurofxref.zip?d4acbc94de4b8c8a6550ef5d9be07261")
@@ -17,15 +17,23 @@ except:
 outfile.write(response.read())
 outfile.close()
 
-zip_ref = zipfile.ZipFile("./ref_currency.zip", 'r')
-zip_ref.extractall("./")
+zip_ref = zipfile.ZipFile("./data/ref_currency.zip", 'r')
+zip_ref.extractall("./data")
 zip_ref.close()
 
-fxFile = open("euroxref.csv", "r")
-while input = fxFile.readline():
-    print(input)
+
+try:
+    fxFile = open("./data/eurofxref.csv", "r")
+except IOError:
+    print "The file does not exist"
+
+input = fxFile.readlines()
 fxFile.close()
 
+for line in input:
+    records = line.split(",")
+    for pair in records:
+        print(pair)
 
 #for i=0;i<4;i++:
 #    print
