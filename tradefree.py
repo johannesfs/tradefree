@@ -4,12 +4,15 @@ import zipfile
 
 print("Welcome to the liberation of trading: TradeFree")
 
-#urllib2.quote
+dataDirectory = "/Users/johannes/Projects/tradefree/data"
+historicalDataUrl = "https://www.ecb.europa.eu/stats/eurofxref/eurofxref-hist\
+.zip?76f8c1fe67f7febddf32443dbafa6424"
+currentDataUrl = "https://www.ecb.europa.eu/stats/eurofxref/eurofxref.zip?d4acbc94de4b8c8a6550ef5d9be07261"
 
-outfile = open("./data/ref_currency.zip", "w")
+outfile = open(dataDirectory + "/ref_currency.zip", "w")
 
 try:
-    response = urllib2.urlopen("https://www.ecb.europa.eu/stats/eurofxref/eurofxref.zip?d4acbc94de4b8c8a6550ef5d9be07261")
+    response = urllib2.urlopen(historicalDataUrl)
 except:
     print("Fail")
 #html = response.read()
@@ -23,7 +26,7 @@ zip_ref.close()
 
 
 try:
-    fxFile = open("./data/eurofxref.csv", "r")
+    fxFile = open("./data/eurofxref-hist.csv", "r")
 except IOError:
     print "The file does not exist"
 
