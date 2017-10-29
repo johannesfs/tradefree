@@ -1,6 +1,8 @@
 import urllib2
 import zipfile
-#import mysql.connector
+from collections import defaultdict
+import mysql.connector
+from datetime import date, datetime, timedelta
 
 print("Welcome to the liberation of trading: TradeFree")
 
@@ -33,23 +35,73 @@ except IOError:
 input = fxFile.readlines()
 fxFile.close()
 
+rowNumber = 0
+currencyPair = {}
+fxRates = defaultdict(dict)
+
 for line in input:
+    i = 0
+    date = ""
     records = line.split(",")
+    
     for pair in records:
-        print(pair)
+        
+        if i == 0:
+            date = pair
 
-#for i=0;i<4;i++:
-#    print
+        if rowNumber == 0:
+            currencyPair[i] = "EUR/" + str(pair)
+        elif i > 0:
+            fxRates[currencyPair[i]][date] = pair
+                            
+        i = i + 1
+    rowNumber = rowNumber + 1
+print("Parsed " + str(rowNumber)  + " of rows")
 
-#try:
-#  cnx = mysql.connector.connect(user='scott',
-#                                database='testt')
-#except mysql.connector.Error as err:
-#  if err.errno == errorcode.ER_ACCESS_DENIED_ERROR:
-#    print("Something is wrong with your user name or password")
-#  elif err.errno == errorcode.ER_BAD_DB_ERROR:
-#    print("Database does not exist")
-#  else:
-#    print(err)
-#else:
-#  cnx.close()
+print(fxRates["EUR/USD"])
+
+try:
+    cnx = mysql.connector.connect(user='johannes', passwd='tluhmmal75', host='localhost', database='tradefree')
+except mysql.connector.Error as err:
+    print(err.errno)
+#    if err.errno == errorcode.ER_ACCESS_DENIED_ERROR:
+#        print("Something is wrong with your user name or password")
+#    elif err.errno == errorcode.ER_BAD_DB_ERROR:
+#        print("Database does not exist")
+#    else:
+#        print(err)
+else:
+    cnx.close()
+
+cursor = cnx.cursor()
+
+## Example code
+tomorrow = datetime.now().date() + timedelta(days=1)
+
+add_employee = ("INSERT INTO employees "
+               "(first_name, last_name, hire_date, gender, birth_date) "
+               "VALUES (%s, %s, %s, %s, %s)")
+add_salary = ("INSERT INTO salaries "
+              "(emp_no, salary, from_date, to_date) "
+              "VALUES (%(emp_no)s, %(salary)s, %(from_date)s, %(to_date)s)")
+
+data_employee = ('Geert', 'Vanderkelen', tomorrow, 'M', date(1977, 6, 14))
+
+# Insert new employee
+cursor.execute(add_employee, data_employee)
+emp_no = cursor.lastrowid
+
+# Insert salary information
+data_salary = {
+  'emp_no': emp_no,
+  'salary': 50000,
+  'from_date': tomorrow,
+  'to_date': date(9999, 1, 1),
+}
+cursor.execute(add_salary, data_salary)
+
+# Make sure data is committed to the database
+cnx.commit()
+
+cursor.close()
+cnx.close()
