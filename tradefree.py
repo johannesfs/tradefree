@@ -1,5 +1,8 @@
 import urllib2
 import zipfile
+import logging
+logging.basicConfig(filename='./log/tradefree.log',format='%(asctime)s %(levelname)s:%(message)s',level=logging.INFO)
+
 from collections import defaultdict
 import mysql.connector
 from datetime import date, datetime, timedelta
@@ -56,11 +59,12 @@ for line in input:
                             
         i = i + 1
     rowNumber = rowNumber + 1
-print("Parsed " + str(rowNumber)  + " of rows")
+logging.info("Parsed " + str(rowNumber)  + " of rows")
 
-print(fxRates["EUR/USD"])
+logging.debug(str(fxRates["EUR/USD"]))
 
 try:
+    logging.debug("Connecting to mysql")
     cnx = mysql.connector.connect(user='johannes', passwd='tluhmmal75', host='localhost', database='tradefree')
 except mysql.connector.Error as err:
     print(err.errno)
@@ -71,6 +75,7 @@ except mysql.connector.Error as err:
 #    else:
 #        print(err)
 else:
+    logging.error("Shutting down mysql connection")
     cnx.close()
 
 cursor = cnx.cursor()
